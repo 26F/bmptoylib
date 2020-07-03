@@ -4,7 +4,7 @@
 bmptoylib
 
 simple bmp drawing functions (creation only; of bmp files)
-with drawing functions for basic shapes
+with drawing functions for basic shapes (not all dimensions are supported)
 */
 
 #include <stdlib.h>
@@ -22,7 +22,7 @@ int scrolling = 0;
 
 // header data, leave as is.
 unsigned char bmpheader[] = {
-							 0x42, 0x4D, 0x46, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
+				 0x42, 0x4D, 0x46, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
 	                         0x00, 0x36, 0x00, 0x00, 0x00, 0x28, 0x00, 0x00, 0x00, 
 	                         0x02, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x01, 
 	                         0x00, 0x18, 0x00, 0x00, 0x00, 0x00, 0x00, 0x10, 0x00, 
@@ -100,13 +100,83 @@ void line(RGBcanvas * rgbcanvas, float x, float y, float x1, float y1, RGBpixel 
 	}
 }
 
-void thickline(RGBcanvas * rgbcanvas, float x, float y, float x1, float y1, int thickness, RGBpixel rgbp) {
+double distance(float x, float y, float x1, float y1) {
+	double deltax = (x - x1) * (x - x1);
+	double deltay = (y - y1) * (y - y1);
+	return sqrt(deltax + deltay);
+}
+
+void filltriangle(RGBcanvas * rgbcanvas, float x, float y, float x1, float y1, float x2, float y2, RGBpixel rgbp) {
+	double dline1 = distance(x, y, x1, y1);
+	double dline2 = distance(x1, y1, x2, y2);
+	double dline3 = distance(x2, y2, x, y);
+
+	double smallesta = (dline1 < dline2) ? dline1 : dline2;
+	double smallestb = (smallesta < dline3) ? smallesta : dline3;
+
+	if (dline1 == smallestb) {
+		line(rgbcanvas, x, y, x1, y1, (RGBpixel){255, 0, 0});	
+	}
+	else
+	{
+		line(rgbcanvas, x, y, x1, y1, rgbp);	
+	}
+
+	if (dline2 == smallestb) {
+		line(rgbcanvas, x1, y1, x2, y2, (RGBpixel){255, 0, 0});	
+	}
+	else {
+		line(rgbcanvas, x1, y1, x2, y2, rgbp);	
+	}
+
+	if (dline3 == smallestb) {
+		line(rgbcanvas, x2, y2, x, y, (RGBpixel){255, 0, 0});	
+	}
+	else
+	{
+		line(rgbcanvas, x2, y2, x, y, rgbp);	
+	}
+	
+	
+}
+
+void quad(RGBcanvas * rgbcanvas, float x,  float y,  float x1, float y1, 
+	                             float x2, float y2, float x3, float y3, RGBpixel rgbp) {
+	line(rgbcanvas, x,  y,  x1, y1,  rgbp);
+	line(rgbcanvas, x1, y1, x2, y2,  rgbp);
+	line(rgbcanvas, x2, y2, x3, y3,  rgbp);
+	line(rgbcanvas, x3, y3, x,  y,   rgbp);
+}
+
+// void fillquad(RGBcanvas * rgbcanvas, float x, float y,   float x1, float y1,
+// 	                                 float x2, float y2, float x3, float y3, 
+// 	                                 RGBpixel rgbp) {
+// }
+
+// void thickline(RGBcanvas * rgbcanvas, float x, float y, float x1, float y1, int thickness, RGBpixel rgbp) {
+	
+// }
+
+void rect(RGBcanvas * rgbcanvas, float x, float y, float x1, float y1, RGBpixel rgbp) {
+	line(rgbcanvas, x, y, x, y1 + 1, rgbp);
+	line(rgbcanvas, x, y, x1, y, rgbp);
+
+	line(rgbcanvas, x1, y1, x, y1, rgbp);
+	line(rgbcanvas, x1, y1, x1, y - 1, rgbp);
+}
+
+void thickrect(RGBcanvas * rgbcanvas, float x, float y, float x1, float y1, int thickness, RGBpixel rgbp) {
 	int c;
 	for (c = 0; c < thickness; c++) {
-		line(rgbcanvas, x + c, y + c, x1 + c, y1 + c, rgbp);
-		line(rgbcanvas, x - c, y - c, x1 + c, y1 + c, rgbp);
-		line(rgbcanvas, x - c, y - c, x1 - c, y1 - c, rgbp);
-		line(rgbcanvas, x + c, y + c, x1 - c, y1 - c, rgbp);
+		rect(rgbcanvas, x, y, x1 - c, y1 - c, rgbp);
+		rect(rgbcanvas, x - c, y - c, x1, y1, rgbp);
+	}
+}
+
+void fillrect(RGBcanvas * rgbcanvas, float x, float y, float x1, float y1, RGBpixel rgbp) {
+	float c;
+	for (c = 0; c < abs(x1 - x); c++) {
+		line(rgbcanvas, x + c, y, x + c, y1, rgbp);
 	}
 }
 
