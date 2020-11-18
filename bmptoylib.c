@@ -2,11 +2,9 @@
 
 /*
 bmptoylib
+Simple BMP library for creation only of BMP files. 
 
-simple bmp drawing functions (creation only; of bmp files)
-with drawing functions for basic shapes (not all dimensions are supported)
-
-Some of the functions have not been implemented yet.
+Just include this .c file in your project using #include "bmptoylib.c" that's it.
 */
 
 #include <stdlib.h>
@@ -129,40 +127,6 @@ double distance(float x, float y, float x1, float y1) {
 	return sqrt(deltax + deltay);
 }
 
-void filltriangle(RGBcanvas * rgbcanvas, float x, float y, float x1, float y1, float x2, float y2, RGBpixel rgbp) {
-	double dline1 = distance(x, y, x1, y1);
-	double dline2 = distance(x1, y1, x2, y2);
-	double dline3 = distance(x2, y2, x, y);
-
-	double smallesta = (dline1 < dline2) ? dline1 : dline2;
-	double smallestb = (smallesta < dline3) ? smallesta : dline3;
-
-	if (dline1 == smallestb) {
-		line(rgbcanvas, x, y, x1, y1, (RGBpixel){255, 0, 0});	
-	}
-	else
-	{
-		line(rgbcanvas, x, y, x1, y1, rgbp);	
-	}
-
-	if (dline2 == smallestb) {
-		line(rgbcanvas, x1, y1, x2, y2, (RGBpixel){255, 0, 0});	
-	}
-	else {
-		line(rgbcanvas, x1, y1, x2, y2, rgbp);	
-	}
-
-	if (dline3 == smallestb) {
-		line(rgbcanvas, x2, y2, x, y, (RGBpixel){255, 0, 0});	
-	}
-	else
-	{
-		line(rgbcanvas, x2, y2, x, y, rgbp);	
-	}
-	
-	
-}
-
 void quad(RGBcanvas * rgbcanvas, float x,  float y,  float x1, float y1, 
 	                             float x2, float y2, float x3, float y3, RGBpixel rgbp) {
 	line(rgbcanvas, x,  y,  x1, y1,  rgbp);
@@ -170,15 +134,6 @@ void quad(RGBcanvas * rgbcanvas, float x,  float y,  float x1, float y1,
 	line(rgbcanvas, x2, y2, x3, y3,  rgbp);
 	line(rgbcanvas, x3, y3, x,  y,   rgbp);
 }
-
-// void fillquad(RGBcanvas * rgbcanvas, float x, float y,   float x1, float y1,
-// 	                                 float x2, float y2, float x3, float y3, 
-// 	                                 RGBpixel rgbp) {
-// }
-
-// void thickline(RGBcanvas * rgbcanvas, float x, float y, float x1, float y1, int thickness, RGBpixel rgbp) {
-	
-// }
 
 void rect(RGBcanvas * rgbcanvas, double x, double y, double x1, double y1, RGBpixel rgbp) {
 	line(rgbcanvas, x, y, x, y1, rgbp);
@@ -194,14 +149,6 @@ void rect(RGBcanvas * rgbcanvas, double x, double y, double x1, double y1, RGBpi
 	line(rgbcanvas, x, y1, x1, y1, rgbp);
 	line(rgbcanvas, x1, y1, x1, y, rgbp);
 }
-
-// void thickrect(RGBcanvas * rgbcanvas, float x, float y, float x1, float y1, int thickness, RGBpixel rgbp) {
-// 	int c;
-// 	for (c = 0; c < thickness; c++) {
-// 		rect(rgbcanvas, x, y, x1 - c, y1 - c, rgbp);
-// 		rect(rgbcanvas, x - c, y - c, x1, y1, rgbp);
-// 	}
-// }
 
 void fillrect(RGBcanvas * rgbcanvas, float x, float y, float x1, float y1, RGBpixel rgbp) {
 	float c;
