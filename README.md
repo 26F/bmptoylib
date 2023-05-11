@@ -12,8 +12,11 @@ I was going to implement heaps more drawing functions but have decided to just k
 The code is free and without license. 
 
 Building: 
+
 gcc -Wall -Werror -Wfatal-errors example.c
+
 on linux you may need -lm as in
+
 gcc -Wall -Werror -Wfatal-errors example.c -lm
 
 the example code illustrates how to use the library.
