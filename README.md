@@ -20,3 +20,5 @@ on linux you may need -lm as in
 gcc -Wall -Werror -Wfatal-errors example.c -lm
 
 the example code illustrates how to use the library.
+
+You will need to have the file called bmptoylib.c in the same folder as example.c or you main.c file.
