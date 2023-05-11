@@ -2,8 +2,8 @@
 #include <stdio.h>
 #include "bmptoylib.c"
 
-const int WIDTH = 1920;
-const int HEIGHT = 1080;
+const int WIDTH = 3840;
+const int HEIGHT = 2160;
 const unsigned int ITERATIONS = 256;
 
 const double zoom = 0.0025;
@@ -14,9 +14,10 @@ unsigned char bouncingmodulus(unsigned char n) {
 	if (n <= 254) {
 		return n;
 	}
-	if (n > 254) {
-		return 255 - (n % 255);
-	}
+	 
+	return 255 - (n % 255);
+	
+
 }
 
 int main() {
